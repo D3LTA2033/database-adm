@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Database Message Lookup</title>
+</head>
+<body>
+  <h1>Message Lookup</h1>
+  <label>Enter file number (1-103):
+    <input id="fileNum" type="number" min="1" max="103">
+  </label>
+  <button onclick="lookup()">Lookup</button>
+  <pre id="output"></pre>
+  <script>
+    async function lookup() {
+      const n = document.getElementById('fileNum').value;
+      if (!n || n < 1 || n > 103) {
+        document.getElementById('output').textContent = 'Invalid file number.';
+        return;
+      }
+      const url = `https://raw.githubusercontent.com/D3LTA2033/database-lookup/main/data/part${n}.txt`;
+      document.getElementById('output').textContent = 'Loading...';
+      try {
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error('File not found');
+        const data = await resp.text();
+        document.getElementById('output').textContent = data;
+      } catch (e) {
+        document.getElementById('output').textContent = e.toString();
+      }
+    }
+  </script>
+</body>
+</html>
